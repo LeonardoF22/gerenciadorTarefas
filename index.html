@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+
+</head>
+<body>
+    <main>
+        <div class="conteudo">
+            <div class="column">
+                <h4>Para Fazer</h4>
+                <div class="tarefas">
+                    <ol class="lista" id="lista-toDo">
+                        
+                    </ol>
+                    <button class="CriarnovaTarefa" id="btnNewToDo">+ Criar Tarefa</button>
+                    <div class="btnGerenciar">
+                        <button style="display: none;" class="AddNovaTarefa" id="btnAddToDo">Adicionar Tarefa</button>
+                        <button style="display: none;" class="RemoverInput" id="btnRemoveInputToDo"><i class="fa-solid fa-x"></i></button>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="column">
+                <h4>Em Progresso</h4>
+                <div class="tarefas">
+                    <ol class="lista" id="lista-onProgess">
+
+                    </ol>
+                    <button class="CriarnovaTarefa" id="btnNewOnProgess">+ Criar Tarefa</button>
+                    <div class="btnGerenciar">
+                        <button style="display: none;" class="AddNovaTarefa" id="btnAddOnProgress">Adicionar Tarefa</button>
+                        <button style="display: none;" class="RemoverInput" id="btnRemoveInputOnProgress"><i class="fa-solid fa-x"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <h4>Completo</h4>
+                <div class="tarefas">
+                    <ol class="lista" id="lista-complete">
+
+                    </ol>
+                    <button class="CriarnovaTarefa" id="btnNewComplete">+ Criar Tarefa</button>
+                    <div class="btnGerenciar">
+                        <button style="display: none;" class="AddNovaTarefa" id="btnAddComplete">Adicionar Tarefa</button>
+                        <button style="display: none;" class="RemoverInput" id="btnRemoveInputComplete"><i class="fa-solid fa-x"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/0b4bc5ad02.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

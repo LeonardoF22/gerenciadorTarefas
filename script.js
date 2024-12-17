@@ -1,98 +1,77 @@
-function exibBtn(btnNew, btnAdd, btnRemove){
-    btnNew.style.display = 'none';
-    btnAdd.style.display = 'block';
-    btnRemove.style.display = 'block';
+let draggedItem;
+
+const dragStart = (event) => {
+    draggedItem = event.target;
+    event.dataTransfer.effectAllowed = "move";
 }
 
-function ocultBtn(btnNew, btnAdd, btnRemove){
-    btnNew.style.display = 'block';
-    btnAdd.style.display = 'none';
-    btnRemove.style.display = 'none';
+const dragOver = (event) => {
+    event.preventDefault();
 }
 
-function criarTarefa(lista, btnNew, btnAdd, btnRemove){
-    exibBtn(btnNew, btnAdd, btnRemove);
-
-    const novoItem = document.createElement('li');
-    const inputItem = document.createElement('input');
-    novoItem.setAttribute('draggable', 'true');
-    novoItem.classList.add("item")
-
-    inputItem.type = 'text';
-    inputItem.placeholder = 'Digite a tarefa';
-    inputItem.className = 'inputTarefa';
-    
-    novoItem.appendChild(inputItem);
-    lista.appendChild(novoItem);
-
-    inputItem.focus();
-
-    inputItem.addEventListener('keypress', (event) => {
-        if(event.key === 'Enter'){
-                salvarTarefa(inputItem, novoItem, btnExcluir,);
-                ocultBtn(btnNew, btnAdd, btnRemove);
-        }
-    })
-
-    btnAdd.addEventListener('click', () => {
-       salvarTarefa(inputItem, novoItem, btnExcluir,);
-       ocultBtn(btnNew, btnAdd, btnRemove);
-    })
-
-    const btnExcluir = document.createElement('button');
-    btnExcluir.className = 'RemoverItem';
-    btnExcluir.innerHTML = '<i class="fa-solid fa-x">';
-
-    btnExcluir.addEventListener('click', () => {
-        novoItem.remove();
-    })
-
-    btnRemove.onclick = () => {
-        if(lista.contains(novoItem) && inputItem.parentElement) {
-            inputItem.remove(); 
-            novoItem.remove();  
-        }
-        ocultBtn(btnNew, btnAdd, btnRemove);
-    };
-}
-
-function salvarTarefa(inputItem, novoItem, btnExcluir){
-    const tituloTarefa = inputItem.value.trim();
-    
-    if(tituloTarefa){
-        novoItem.textContent = tituloTarefa;
-        novoItem.appendChild(btnExcluir);
-    } else {
-        inputItem.remove();
-        novoItem.remove();
+const dragEnter = ({target}) => {
+    if(target.classList.contains("tarefas")){
+        target.classList.add("coluna-destaque")
     }
 }
 
-//ToDo
-const btnNewToDo = document.getElementById('btnNewToDo');
-const btnAddToDo = document.getElementById('btnAddToDo');
-const listToDo = document.getElementById('lista-toDo');
-const btnRemoveInputToDo = document.getElementById('btnRemoveInputToDo');
-btnNewToDo.addEventListener('click', () => {
-    criarTarefa(listToDo, btnNewToDo, btnAddToDo, btnRemoveInputToDo);
-})
+const dragLeave = ({target}) => {
+    target.classList.remove("coluna-destaque");
+}
 
-//OnProgress
-const btnNewOnProgress = document.getElementById('btnNewOnProgess');
-const btnAddOnProgress = document.getElementById('btnAddOnProgress')
-const listaOnProgress = document.getElementById('lista-onProgess');
-const btnRemoveInputOnProgress = document.getElementById('btnRemoveInputOnProgress');
+const drop = ({target}) =>{
+    target.classList.remove("coluna-destaque");
+    if(target.classList.contains("tarefas")){
+        target.append(draggedItem);
+    }  
+}
 
-btnNewOnProgress.addEventListener('click', () =>{
-   criarTarefa(listaOnProgress, btnNewOnProgress, btnAddOnProgress, btnRemoveInputOnProgress);
-})
+const novaTarefa = ({target}) => {
+    if(!target.classList.contains("tarefas")) return;
+    const tarefa = document.createElement("section");
+    tarefa.className = "tarefa";
+    tarefa.draggable = "true";
+    tarefa.addEventListener("dragstart", dragStart);
+    tarefa.addEventListener("focusout", () =>{
+        tarefa.contentEditable = "false";
+        const btnExcluir = document.createElement("button");
+        btnExcluir.className = "remover_tarefa";
+        btnExcluir.innerHTML = '<i class="fa-solid fa-x">'
 
-//Complete
-const btnNewComplete = document.getElementById('btnNewComplete');
-const btnAddComplete = document.getElementById('btnAddComplete');
-const listaComplete = document.getElementById('lista-complete');
-const btnRemoveInputComplete = document.getElementById('btnRemoveInputComplete');
+        btnExcluir.addEventListener("click", () =>{
+            tarefa.remove();
+        })
+        tarefa.append(btnExcluir);
 
-btnNewComplete.addEventListener('click', () =>{
-    criarTarefa(listaComplete, btnNewComplete, btnAddComplete, btnRemoveInputComplete);
-})
+        if(!tarefa.textContent) tarefa.remove();
+    })
+
+    tarefa.contentEditable = "true";
+    tarefa.addEventListener("keypress", (event) =>{
+        if(event.key === 'Enter'){
+            target.append(tarefa);
+        }
+    })
+    target.append(tarefa);
+    tarefa.focus();
+}
+
+const removerTarefa = (tarefa) => {
+    tarefa.remove();
+}
+
+const colunas = document.querySelectorAll(".tarefas")
+const tarefas = document.querySelectorAll(".tarefa");
+
+colunas.forEach((coluna) => {
+    coluna.addEventListener("dragover", dragOver);
+    coluna.addEventListener("drop", drop);
+    coluna.addEventListener("dragenter", dragEnter);
+    coluna.addEventListener("dragleave", dragLeave);
+    coluna.addEventListener("dblclick", novaTarefa);
+});
+
+tarefas.forEach((tarefa) => {
+    tarefa.addEventListener("dragstart", dragStart);
+});
+
